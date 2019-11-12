@@ -10,21 +10,23 @@ Module Program
 
     'Dim - Dimension variable, They can be changed during runtime
     Dim rooms As New ArrayList 'Create an array called rooms, We will store the rooms booked in here
-    Dim numberOfRooms As Integer 'Create a variable called numberOfRooms as an integer, We will store the number of rooms they want to book here
     Dim numberOfNights As Integer 'Create a variable called numberOfNights as an integer, We will store their length of stay here
-
     Dim familyName As String = "" 'Create a variable called familyName as a string, This is where we will store the family name
     Dim arrivalDate As DateTime 'Create a variable called arrivalDate as a DateTime, This will be how we convert their stay to the appropriate formatting 
     Dim totalCost As Integer 'Varaible to add the rooms costs together to get the final cost
     Dim input As String 'Variable we add to accept placeholder inputs
 
+    'Main() will play the manager role to the rest of the project, calling functions and subs when they are needed while also collecting data when needed
     Sub Main(args As String())
+
+        'INPUT - Request family name, This cannot be blank
         While (String.IsNullOrEmpty(familyName.Replace(" ", "")))
             Console.WriteLine("Hello ! Please enter your family name :")
             familyName = Console.ReadLine()
             Console.Clear()
         End While
 
+        'INPUT - Request arrival date, This cannot be blank or an invalid DateTime.
         Console.WriteLine("Thank you ! Please enter your arrival date (Please use the format dd/mm/yyyy")
         While (True)
             Try
@@ -36,6 +38,7 @@ Module Program
             End Try
         End While
 
+        'INPUT - Request the stay length, this must be between 1 - 14, this also has to be a valid number
         Console.WriteLine("Thank you ! Please enter the number of nights you wish to stay for. The stay is 14 nights")
         While Not (numberOfNights > 0 And numberOfNights <= 14)
             Try
@@ -48,19 +51,17 @@ Module Program
                 Console.Clear()
                 Console.WriteLine("That is not a valid number ! Please try again")
             End Try
-
         End While
 
-        Console.WriteLine("Thank you ! We will now display your current data !" + vbCrLf + "Please press enter to continue ...")
-        Console.ReadLine()
+        Console.WriteLine("Thank you ! We will now display your current data !" + vbCrLf + "Please press any key to continue ...")
+        Console.ReadLine() 'This line doesnt save the input of the user, we use this as a way of pausing so that the user can read the above message 
         UpdateDisplay()
 
         Console.WriteLine("Now please enter what room you want to book, Your options are - ""Single Room"", ""Double Room"" and ""Family Suite""" + vbCrLf)
         RequestRooms()
-
-
     End Sub
 
+    'OUTPUT - UpdateDisplay() hold all the logic for updating the screen when we need to add information to the fourmlike output, This is used so we dont repeat ourselves all over the project
     Sub UpdateDisplay()
         Console.Clear()
         Console.WriteLine("Family Name: " & familyName)
@@ -81,6 +82,7 @@ Module Program
         End If
     End Sub
 
+    'INPUT - RequestRooms() simply asks for the type of rooms that the user wants and adds them to the arraylist, This is only here to clean up Main()
     Sub RequestRooms()
         For i = 1 To 3
             If i > 1 Then
@@ -109,17 +111,18 @@ Module Program
         Next
     End Sub
 
-    Function calculateTotalCost(ArrayList)
-        totalCost = 0
-        For Each room In ArrayList
+    'RETURNS INTEGER - calculateTotalCost() takes the rooms currently being orderd and calculates the cost of all of them, It then returns the total cost
+    Function calculateTotalCost(ArrayList) 'Create a function and take in an ArrayList
+        totalCost = 0 'set total cost to 0, So we have a fresh start and avoid adding to the cost that may have originaly been calculated
+        For Each room In ArrayList 'Loop through the Arraylist passed to the function and assign the current item as "room"
             If (room = SINGLEROOM) Then
                 totalCost += SINGLEROOM
-            ElseIf (room = DOUBLEROOM) Then
+            ElseIf (room = DOUBLEROOM) Then 'The rest of this is duplicated, If the room is equal to x, then add the value of x to totalCost
                 totalCost += DOUBLEROOM
             ElseIf (room = FAMILYSUITE) Then
                 totalCost += FAMILYSUITE
             End If
         Next
-        Return totalCost
+        Return totalCost 'Return the calculated cost
     End Function
 End Module
