@@ -37,9 +37,19 @@ Module Program
         End While
 
         Console.WriteLine("Thank you ! Please enter the number of nights you wish to stay for. The stay is 14 nights")
-        numberOfNights = Console.ReadLine()
-        Console.Clear()
+        While Not (numberOfNights > 0 And numberOfNights <= 14)
+            Try
+                numberOfNights = Console.ReadLine()
+                If Not (numberOfNights > 0 And numberOfNights <= 14) Then
+                    Console.Clear()
+                    Console.WriteLine($"{numberOfNights} is not a valid stay length ! Please choose a number between 1 - 14")
+                End If
+            Catch ex As InvalidCastException
+                Console.Clear()
+                Console.WriteLine("That is not a valid number ! Please try again")
+            End Try
 
+        End While
 
         Console.WriteLine("Thank you ! We will now display your current data !" + vbCrLf + "Please press enter to continue ...")
         Console.ReadLine()
@@ -60,14 +70,14 @@ Module Program
             Console.WriteLine("Rooms Booked:             Cost:")
             For i = 0 To rooms.Count - 1
                 If (rooms(i) = SINGLEROOM) Then
-                    Console.WriteLine("Single Room               £" + SINGLEROOM.ToString)
+                    Console.WriteLine("Single Room               Â£" + SINGLEROOM.ToString)
                 ElseIf (rooms(i) = DOUBLEROOM) Then
-                    Console.WriteLine("Double Room               £" + DOUBLEROOM.ToString)
+                    Console.WriteLine("Double Room               Â£" + DOUBLEROOM.ToString)
                 ElseIf (rooms(i) = FAMILYSUITE) Then
-                    Console.WriteLine("Family Suite              £" + FAMILYSUITE.ToString)
+                    Console.WriteLine("Family Suite              Â£" + FAMILYSUITE.ToString)
                 End If
             Next
-            Console.WriteLine(vbCrLf + "Total Cost:               £" & calculateTotalCost(rooms))
+            Console.WriteLine(vbCrLf + "Total Cost:               Â£" & calculateTotalCost(rooms))
         End If
     End Sub
 
