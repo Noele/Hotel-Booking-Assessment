@@ -13,11 +13,11 @@ Module Program
     Dim numberOfNights As Integer 'Create a variable called numberOfNights as an integer, We will store their length of stay here
     Dim familyName As String = "" 'Create a variable called familyName as a string, This is where we will store the family name
     Dim arrivalDate As DateTime 'Create a variable called arrivalDate as a DateTime, This will be how we convert their stay to the appropriate formatting 
-    Dim totalCost As Integer 'Varaible to add the rooms costs together to get the final cost
+    Dim totalCost As Double 'Varaible to add the rooms costs together to get the final cost
     Dim input As String 'Variable we add to accept placeholder inputs
-
+    Dim isDiscounted As Boolean = False
     'Main() will play the manager role to the rest of the project, calling functions and subs when they are needed while also collecting data when needed
-    Sub Main(args As String())
+    Sub Main()
 
         'INPUT - Request family name, This cannot be blank
         While (String.IsNullOrEmpty(familyName.Replace(" ", "")))
@@ -79,12 +79,16 @@ Module Program
                 End If
             Next
             Console.WriteLine(vbCrLf + "Total Cost:               £" & calculateTotalCost(rooms))
+            Console.WriteLine($"VAT:                      £{totalCost * 0.2}")
+            If (isDiscounted) Then
+                Console.WriteLine($"Discount:                -£{totalCost * 0.1}")
+            End If
         End If
     End Sub
 
     'INPUT - RequestRooms() simply asks for the type of rooms that the user wants and adds them to the arraylist, This is only here to clean up Main()
     Sub RequestRooms()
-        For i = 1 To 3
+        For i = 1 To 4
             If i > 1 Then
                 Console.WriteLine("Please add another room to your cart, Or type ""exit"" to finish adding rooms, Your options are - ""Single Room"", ""Double Room"" and ""Family Suite""" + vbCrLf)
             End If
@@ -111,18 +115,23 @@ Module Program
         Next
     End Sub
 
-    'RETURNS INTEGER - calculateTotalCost() takes the rooms currently being orderd and calculates the cost of all of them, It then returns the total cost
+    'RETURNS DOUBLE - calculateTotalCost() takes the rooms currently being orderd and calculates the cost of all of them, It then returns the total cost
     Function calculateTotalCost(ArrayList) 'Create a function and take in an ArrayList
         totalCost = 0 'set total cost to 0, So we have a fresh start and avoid adding to the cost that may have originaly been calculated
         For Each room In ArrayList 'Loop through the Arraylist passed to the function and assign the current item as "room"
-            If (room = SINGLEROOM) Then
+            If (room.Equals(SINGLEROOM)) Then
                 totalCost += SINGLEROOM
-            ElseIf (room = DOUBLEROOM) Then 'The rest of this is duplicated, If the room is equal to x, then add the value of x to totalCost
+            ElseIf (room.Equals(DOUBLEROOM)) Then 'The rest of this is duplicated, If the room is equal to x, then add the value of x to totalCost
                 totalCost += DOUBLEROOM
-            ElseIf (room = FAMILYSUITE) Then
+            ElseIf (room.Equals(FAMILYSUITE)) Then
                 totalCost += FAMILYSUITE
             End If
         Next
+        totalCost += (totalCost * 0.2) 'Add VAT of 20%
+        If (ArrayList.Count >= 3 And numberOfNights >= 7) Then '10% discount if 3 or more rooms are booked and length of stay is 7 or more nights
+            totalCost = totalCost - (totalCost * 0.1)
+            isDiscounted = True
+        End If
         Return totalCost 'Return the calculated cost
     End Function
 End Module
